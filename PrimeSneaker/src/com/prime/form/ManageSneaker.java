@@ -9,22 +9,141 @@ import com.prime.form.attributeSneaker.ProductDialog;
 import com.prime.form.attributeSneaker.SizeDialog;
 import com.prime.form.attributeSneaker.SoleDialog;
 import com.prime.form.attribute.ViewQr;
+import com.prime.main_model.Material;
+import com.prime.main_model.Model_Brand;
+import com.prime.main_model.Model_Category;
+import com.prime.main_model.Model_Color;
+import com.prime.main_model.Model_DeGiay;
+import com.prime.main_model.Model_addNameProduct;
+import com.prime.main_model.SizeModel;
+import com.prime.responsitory.BrandResponsitory;
+import com.prime.responsitory.CategoryResponsitory;
+import com.prime.responsitory.ColorResponsitory;
+import com.prime.responsitory.MaterialResponsitory;
+import com.prime.responsitory.SizeResponsitory;
+import com.prime.responsitory.SoleResponsitory;
+import com.prime.responsitory.TeSPResponsitory;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class ManageSneaker extends javax.swing.JPanel {
-    
+
     public interface QRCallback {
+
         void getQRdata(String qrCode);
     }
+    private final BrandResponsitory brs = new BrandResponsitory();
+    private final CategoryResponsitory cateRS = new CategoryResponsitory();
+    private final ColorResponsitory colorRS = new ColorResponsitory();
+    private final MaterialResponsitory materRS = new MaterialResponsitory();
+    private final SizeResponsitory sizeRS = new SizeResponsitory();
+    private final SoleResponsitory soleRS = new SoleResponsitory();
+    private final TeSPResponsitory trs = new TeSPResponsitory();
+
+    DefaultTableModel modelAttribute = new DefaultTableModel();
+
     public ManageSneaker() {
         initComponents();
         setOpaque(false);
         btnStopSell.setVisible(false);
         btnOnSell.setVisible(false);
+        for (Model_Brand brand : brs.getALl()) {
+            cboBrand.addItem(brand.getBrand_name());
+        }
+        for (Model_Category cate : cateRS.getALl()) {
+            cboCategory.addItem(cate.getCategory_name());
+        }
+        for (Model_Color color : colorRS.getALl()) {
+            cboColor.addItem(color.getColor_name());
+        }
+        for (Model_DeGiay sole : soleRS.getAll()) {
+            cboSole.addItem(sole.getTenDeGiay());
+        }
+        for (SizeModel size : sizeRS.getAll()) {
+            cboSize.addItem(size.getSize_Number() + "");
+        }
+        for (Material ma : materRS.getAll()) {
+            cboMaterial.addItem(ma.getNameMaterial());
+        }
+        for (Model_addNameProduct name : trs.getAll()) {
+            cboProdName.addItem(name.getProduct_name());
+
+        }
+        modelAttribute = (DefaultTableModel) tblAttribute.getModel();
+        loadCategoryToTable(cateRS.getALl());
     }
+
+    private void loadCategoryToTable(ArrayList<Model_Category> cate) {
+        modelAttribute.setRowCount(0);
+        for (Model_Category mcate : cate) {
+            modelAttribute.addRow(new Object[]{
+                mcate.getCategory_id(),
+                mcate.getCategory_name()
+            });
+        }
+    }
+
+    private void loadBrandToTable(ArrayList<Model_Brand> br) {
+        modelAttribute.setRowCount(0);
+        for (Model_Brand b : br) {
+            modelAttribute.addRow(new Object[]{
+                b.getBrand_id(),
+                b.getBrand_name()
+            });
+        }
+    }
+
+    private void loadColorToTable(ArrayList<Model_Color> color) {
+        modelAttribute.setRowCount(0);
+        for (Model_Color co : color) {
+            modelAttribute.addRow(new Object[]{
+                co.getColor_id(),
+                co.getColor_name()
+            });
+        }
+    }
+
+    private void loadMaterialToTable(ArrayList<Material> material) {
+        modelAttribute.setRowCount(0);
+        for (Material ma : material) {
+            modelAttribute.addRow(new Object[]{
+                ma.getMaMaterial(),
+                ma.getNameMaterial()
+            });
+        }
+    }
+
+    private void loadSizeToTable(ArrayList<SizeModel> size) {
+        modelAttribute.setRowCount(0);
+        for (SizeModel si : size) {
+            modelAttribute.addRow(new Object[]{
+                si.getId_Size(),
+                si.getSize_Number()
+            });
+        }
+    }
+
+    private void loadSoleToTable(ArrayList<Model_DeGiay> sole) {
+        modelAttribute.setRowCount(0);
+        for (Model_DeGiay so : sole) {
+            modelAttribute.addRow(new Object[]{
+                so.getMaDeGiay(),
+                so.getTenDeGiay()
+            });
+        }
+    }
+
+    private void showAttribute(int index) {
+        txtAttributeID.setText(tblAttribute.getValueAt(index, 0).toString());
+        txtAttributeName.setText(tblAttribute.getValueAt(index, 1).toString());
+        tblAttribute.setRowSelectionInterval(index, index);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -464,21 +583,17 @@ public class ManageSneaker extends javax.swing.JPanel {
         jLabel36.setText("Đế giày");
 
         cboProdName.setBackground(new java.awt.Color(39, 80, 150));
-        cboProdName.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
         cboProdName.setBorder(null);
 
         cboStatus.setBackground(new java.awt.Color(39, 80, 150));
-        cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        cboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang bán", "Đã ngừng bán", "Hết hàng" }));
         cboStatus.setBorder(null);
 
         cboCategory.setBackground(new java.awt.Color(39, 80, 150));
-        cboCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
 
         cboBrand.setBackground(new java.awt.Color(39, 80, 150));
-        cboBrand.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
 
         cboColor.setBackground(new java.awt.Color(39, 80, 150));
-        cboColor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
         cboColor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboColorActionPerformed(evt);
@@ -486,17 +601,14 @@ public class ManageSneaker extends javax.swing.JPanel {
         });
 
         cboMaterial.setBackground(new java.awt.Color(39, 80, 150));
-        cboMaterial.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
 
         cboSole.setBackground(new java.awt.Color(39, 80, 150));
-        cboSole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
 
         txtPrice.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         txtQuantity.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(39, 80, 150)));
 
         cboSize.setBackground(new java.awt.Color(39, 80, 150));
-        cboSize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
 
         btnAddProdName.setBackground(new java.awt.Color(39, 80, 150));
         btnAddProdName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -1034,22 +1146,52 @@ public class ManageSneaker extends javax.swing.JPanel {
 
         buttonGroup2.add(rdoMaterial);
         rdoMaterial.setText("Chất liệu");
+        rdoMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoMaterialActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(rdoCategory);
         rdoCategory.setSelected(true);
         rdoCategory.setText("Danh mục");
+        rdoCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoCategoryActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(rdoBrand);
         rdoBrand.setText("Hãng");
+        rdoBrand.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoBrandActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(rdoColor);
         rdoColor.setText("Màu sắc");
+        rdoColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoColorActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(rdoSize);
         rdoSize.setText("Kích cỡ");
+        rdoSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoSizeActionPerformed(evt);
+            }
+        });
 
         buttonGroup2.add(rdoSole);
         rdoSole.setText("Đế giày");
+        rdoSole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoSoleActionPerformed(evt);
+            }
+        });
 
         jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(39, 80, 150));
@@ -1109,14 +1251,29 @@ public class ManageSneaker extends javax.swing.JPanel {
         btnAddAttribute.setBackground(new java.awt.Color(39, 80, 150));
         btnAddAttribute.setForeground(new java.awt.Color(255, 255, 255));
         btnAddAttribute.setText("Thêm");
+        btnAddAttribute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddAttributeActionPerformed(evt);
+            }
+        });
 
         btnClear.setBackground(new java.awt.Color(39, 80, 150));
         btnClear.setForeground(new java.awt.Color(255, 255, 255));
         btnClear.setText("Làm mới");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
 
         btnUpdateAttribute.setBackground(new java.awt.Color(39, 80, 150));
         btnUpdateAttribute.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdateAttribute.setText("Sửa");
+        btnUpdateAttribute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateAttributeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -1193,11 +1350,21 @@ public class ManageSneaker extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblAttribute.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAttributeMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblAttribute);
 
         jLabel20.setText("Search");
 
         txtSearchAttribute.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(39, 80, 150)));
+        txtSearchAttribute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchAttributeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -1305,7 +1472,7 @@ public class ManageSneaker extends javax.swing.JPanel {
     private void txtSearchProductFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchProductFocusLost
         if (txtSearchProduct.getText().equals("")) {
             txtSearchProduct.setText("Tìm kiếm theo mã sản phẩm, tên sản phẩm, danh mục, số lượng");
-            setForeground(new Color(39,80,150));
+            setForeground(new Color(39, 80, 150));
         }
     }//GEN-LAST:event_txtSearchProductFocusLost
 
@@ -1375,6 +1542,513 @@ public class ManageSneaker extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnOnSellActionPerformed
 
+    private void txtSearchAttributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchAttributeActionPerformed
+        if (rdoCategory.isSelected()) {
+            loadCategoryToTable(cateRS.searchCate(txtSearchAttribute.getText()));
+        }
+        if (rdoBrand.isSelected()) {
+            loadBrandToTable(brs.search(txtSearchAttribute.getText()));
+        }
+        if (rdoColor.isSelected()) {
+            loadColorToTable(colorRS.search(txtSearchAttribute.getText()));
+        }
+        if (rdoMaterial.isSelected()) {
+            loadMaterialToTable(materRS.search(txtSearchAttribute.getText()));
+        }
+        if (rdoSize.isSelected()) {
+            loadSizeToTable(sizeRS.search(txtSearchAttribute.getText()));
+        }
+        if (rdoSole.isSelected()) {
+            loadSoleToTable(soleRS.search(txtSearchAttribute.getText()));
+        }
+    }//GEN-LAST:event_txtSearchAttributeActionPerformed
+
+    private void tblAttributeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAttributeMouseClicked
+        int index = tblAttribute.getSelectedRow();
+        showAttribute(index);
+    }//GEN-LAST:event_tblAttributeMouseClicked
+
+    private void btnAddAttributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAttributeActionPerformed
+        if (rdoCategory.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập loại giày");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Loại giày không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_Category> lst = cateRS.getALl();
+            for (Model_Category cate : lst) {
+                if (txtAttributeName.getText().equals(cate.getCategory_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_Category cate = readForm();
+            if (cateRS.addCategory(cate) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadCategoryToTable(cateRS.getALl());
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoBrand.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Brand không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_Brand> lst = brs.getALl();
+            for (Model_Brand br : lst) {
+                if (txtAttributeName.getText().equals(br.getBrand_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_Brand br = readFormBr();
+            if (brs.addBrand(br) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadBrandToTable(brs.getALl());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoColor.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Color không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_Color> lst = colorRS.getALl();
+            for (Model_Color co : lst) {
+                if (txtAttributeName.getText().equals(co.getColor_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_Color co = readFormCo();
+            if (colorRS.addColor(co) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadBrandToTable(brs.getALl());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoMaterial.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Material không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Material> lst = materRS.getAll();
+            for (Material co : lst) {
+                if (txtAttributeName.getText().equals(co.getNameMaterial())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Material co = readFormMa();
+            if (materRS.addMaterial(co) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadBrandToTable(brs.getALl());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoSize.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập Size giày");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            try {
+                double size_Number = Double.parseDouble(txtAttributeName.getText());
+                if (size_Number < 1 || size_Number > 50) {
+                    JOptionPane.showMessageDialog(this, "Size giày nằm trong khoảng 1 -50");
+                    txtAttributeName.requestFocus();
+                    return;
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Size giày phải là số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<SizeModel> lst = sizeRS.getAll();
+            for (SizeModel co : lst) {
+                if (Double.parseDouble(txtAttributeName.getText()) == co.getSize_Number()) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            SizeModel dg = readFormSi();
+            if (sizeRS.addSize(dg) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadSizeToTable(sizeRS.getAll());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoSole.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên Đế Giày");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Tên Đế giày không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_DeGiay> lst = soleRS.getAll();
+            for (Model_DeGiay co : lst) {
+                if (txtAttributeName.getText().equals(co.getTenDeGiay())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_DeGiay dg = readFormDe();
+            if (soleRS.addSole(dg) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadSoleToTable(soleRS.getAll());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+    }//GEN-LAST:event_btnAddAttributeActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnUpdateAttributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateAttributeActionPerformed
+        int row = tblAttribute.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 dòng cần sửa");
+            return;
+        }
+        if (rdoCategory.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập loại giày");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Loại giày không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_Category> lst = cateRS.getALl();
+            for (Model_Category cate : lst) {
+                if (txtAttributeName.getText().equals(cate.getCategory_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_Category cate = readForm1();
+            if (cateRS.upDateCategory(cate) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadCategoryToTable(cateRS.getALl());
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoBrand.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Brand không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_Brand> lst = brs.getALl();
+            for (Model_Brand br : lst) {
+                if (txtAttributeName.getText().equals(br.getBrand_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_Brand br = readFormBr1();
+            if (brs.upDateBrand(br) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadBrandToTable(brs.getALl());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoColor.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Color không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_Color> lst = colorRS.getALl();
+            for (Model_Color co : lst) {
+                if (txtAttributeName.getText().equals(co.getColor_name())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_Color co = readFormCo1();
+            if (colorRS.upDateColor(co) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadBrandToTable(brs.getALl());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoMaterial.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thuộc tính");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Material không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Material> lst = materRS.getAll();
+            for (Material co : lst) {
+                if (txtAttributeName.getText().equals(co.getNameMaterial())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Material co = readFormMa1();
+            if (materRS.updateMaterial(co) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadBrandToTable(brs.getALl());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoSize.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập Size giày");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            try {
+                double size_Number = Double.parseDouble(txtAttributeName.getText());
+                if (size_Number < 1 || size_Number > 50) {
+                    JOptionPane.showMessageDialog(this, "Size giày nằm trong khoảng 1 -50");
+                    txtAttributeName.requestFocus();
+                    return;
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Size giày phải là số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<SizeModel> lst = sizeRS.getAll();
+            for (SizeModel co : lst) {
+                if (Double.parseDouble(txtAttributeName.getText()) == co.getSize_Number()) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            SizeModel dg = readFormSi1();
+            if (sizeRS.updateSize(dg) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadSizeToTable(sizeRS.getAll());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+        if (rdoSole.isSelected()) {
+
+            if (txtAttributeName.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập tên Đế Giày");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            if (txtAttributeName.getText().trim().matches("[0-9]+")) {
+                JOptionPane.showMessageDialog(this, "Tên Đế giày không được nhập số");
+                txtAttributeName.requestFocus();
+                return;
+            }
+            ArrayList<Model_DeGiay> lst = soleRS.getAll();
+            for (Model_DeGiay co : lst) {
+                if (txtAttributeName.getText().equals(co.getTenDeGiay())) {
+                    JOptionPane.showMessageDialog(this, "Thuộc tính này đã tồn tại");
+                    return;
+                }
+            }
+            Model_DeGiay dg = readFormDe1();
+            if (soleRS.updateSole(dg) != null) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                loadSoleToTable(soleRS.getAll());
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại");
+            }
+        }
+    }//GEN-LAST:event_btnUpdateAttributeActionPerformed
+
+    private void rdoCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoCategoryActionPerformed
+        loadCategoryToTable(cateRS.getALl());
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+
+    }//GEN-LAST:event_rdoCategoryActionPerformed
+
+    private void rdoBrandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoBrandActionPerformed
+        loadBrandToTable(brs.getALl());
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+    }//GEN-LAST:event_rdoBrandActionPerformed
+
+    private void rdoColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoColorActionPerformed
+        loadColorToTable(colorRS.getALl());
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+    }//GEN-LAST:event_rdoColorActionPerformed
+
+    private void rdoMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoMaterialActionPerformed
+        loadMaterialToTable(materRS.getAll());
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+    }//GEN-LAST:event_rdoMaterialActionPerformed
+
+    private void rdoSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSizeActionPerformed
+        loadSizeToTable(sizeRS.getAll());
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+    }//GEN-LAST:event_rdoSizeActionPerformed
+
+    private void rdoSoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSoleActionPerformed
+        loadSoleToTable(soleRS.getAll());
+        txtAttributeID.setText("");
+        txtAttributeName.setText("");
+    }//GEN-LAST:event_rdoSoleActionPerformed
+    private Model_Category readForm() {
+        Model_Category cate = new Model_Category();
+        cate.setCategory_name(txtAttributeName.getText());
+        return cate;
+    }
+
+    private Model_Brand readFormBr() {
+        Model_Brand br = new Model_Brand();
+        br.setBrand_name(txtAttributeName.getText());
+        return br;
+    }
+
+    private Model_Color readFormCo() {
+        Model_Color br = new Model_Color();
+        br.setColor_name(txtAttributeName.getText());
+        return br;
+    }
+
+    private Material readFormMa() {
+        Material br = new Material();
+        br.setNameMaterial(txtAttributeName.getText());
+        return br;
+    }
+
+    private SizeModel readFormSi() {
+        SizeModel br = new SizeModel();
+        br.setSize_Number(Double.parseDouble(txtAttributeName.getText()));
+        return br;
+    }
+
+    private Model_DeGiay readFormDe() {
+        Model_DeGiay br = new Model_DeGiay();
+        br.setTenDeGiay(txtAttributeName.getText());
+        return br;
+    }
+
+    private Model_DeGiay readFormDe1() {
+        Model_DeGiay br = new Model_DeGiay();
+        br.setTenDeGiay(txtAttributeName.getText());
+        br.setMaDeGiay(Integer.parseInt(txtAttributeID.getText()));
+        return br;
+
+    }
+
+    private SizeModel readFormSi1() {
+        SizeModel br = new SizeModel();
+        br.setSize_Number(Double.parseDouble(txtAttributeName.getText()));
+        br.setId_Size(Integer.parseInt(txtAttributeID.getText()));
+        return br;
+
+    }
+
+    private Material readFormMa1() {
+        Material br = new Material();
+        br.setNameMaterial(txtAttributeName.getText());
+        br.setMaMaterial(Integer.parseInt(txtAttributeID.getText()));
+        return br;
+
+    }
+
+    private Model_Color readFormCo1() {
+        Model_Color br = new Model_Color();
+        br.setColor_name(txtAttributeName.getText());
+        br.setColor_id(Integer.parseInt(txtAttributeID.getText()));
+        return br;
+    }
+
+    private Model_Brand readFormBr1() {
+        Model_Brand br = new Model_Brand();
+        br.setBrand_name(txtAttributeName.getText());
+        br.setBrand_id(Integer.parseInt(txtAttributeID.getText()));
+        return br;
+
+    }
+
+    private Model_Category readForm1() {
+        Model_Category cate = new Model_Category();
+        cate.setCategory_name(txtAttributeName.getText());
+        cate.setCategory_id(Integer.parseInt(txtAttributeID.getText()));
+        return cate;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddAttribute;
     private javax.swing.JButton btnAddNewProd2;
